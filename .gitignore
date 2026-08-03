@@ -17,3 +17,7 @@ __pycache__/
 .omx/
 .venv/
 src_w_solution/
+
+# Bản trung gian khi convert/OCR PDF (sinh lại được bằng scripts/)
+build/
+PHASE2_STRATEGY.md

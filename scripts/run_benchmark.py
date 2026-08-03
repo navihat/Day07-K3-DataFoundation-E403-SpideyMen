@@ -45,20 +45,20 @@ QUERIES = [
     {
         "id": 1,
         "text": "Sinh viên không thuộc diện cảnh báo học tập được đăng ký tối đa và tối thiểu bao nhiêu tín chỉ trong một học kỳ chính?",
-        "doc_id": "quy-che-dao-tao-2025",
+        "doc_id": "quy-che-dao-tao-5445",
         "keywords": ["24 TC", "12 TC"],
         "note": "bẫy: đoạn gần giống ở chương thạc sĩ cũng có 24/12 TC",
     },
     {
         "id": 2,
         "text": "Điều kiện để sinh viên được xét học bổng khuyến khích học tập loại A, B và C là gì?",
-        "doc_id": "hoc-bong-kkht",
+        "doc_id": "hoc-bong-khuyen-khich-hoc-tap",
         "keywords": ["3,6", "3,2", "2,5"],
     },
     {
         "id": 3,
         "text": "Học phí chương trình đào tạo chuẩn năm học 2025-2026 được quy định như thế nào đối với các ngành Khoa học máy tính và Kỹ thuật hóa học?",
-        "doc_id": "hoc-phi-2025-2026",
+        "doc_id": "quy-dinh-hoc-phi-2025-2026",
         "keywords": ["630", "550"],
         "note": "gold answer nằm trong BẢNG ở Phụ lục I",
     },
@@ -72,7 +72,7 @@ QUERIES = [
     {
         "id": 5,
         "text": "Một học phần được coi là tương đương với học phần khác khi đáp ứng điều kiện nào về nội dung chuyên môn và số tín chỉ?",
-        "doc_id": "quy-che-dao-tao-2025",
+        "doc_id": "quy-che-dao-tao-5445",
         "keywords": ["70%"],
     },
 ]
@@ -142,7 +142,7 @@ def main() -> int:
     emit("| Tài liệu | Chiến lược | count | avg_length |")
     emit("|---|---|---:|---:|")
     for doc in docs:
-        if doc.id not in {"quy-che-dao-tao-2025", "hoc-bong-kkht"}:
+        if doc.id not in {"quy-che-dao-tao-5445", "hoc-bong-khuyen-khich-hoc-tap"}:
             continue
         for strategy, stats in ChunkingStrategyComparator().compare(doc.content, chunk_size=900).items():
             emit(f"| {doc.id} | {strategy} | {stats['count']} | {stats['avg_length']} |")
