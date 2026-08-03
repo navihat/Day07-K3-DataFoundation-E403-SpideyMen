@@ -18,14 +18,19 @@ class KnowledgeBaseAgent:
         self.llm_fn = llm_fn
 
     def answer(self, question: str, top_k: int = 3) -> str:
-        results = self.store.search(question, top_k=top_k)
-        context_snippets = [f"- {r['content']}" for r in results]
-        context_str = "\n".join(context_snippets)
+        chunks = self.store.search(question, top_k=top_k)
+        if not chunks:
+            return "Không tìm thấy thông tin liên quan trong cơ sở tri thức."
+
+        context_blocks: list[str] = []
+        for idx, chunk in enumerate(chunks, start=1):
+            context_blocks.append(f"[Đoạn {idx}]\n{chunk['content']}")
+        context = "\n\n".join(context_blocks)
+
         prompt = (
-            f"Use the following pieces of retrieved context to answer the question.\n\n"
-            f"Context:\n{context_str}\n\n"
-            f"Question: {question}\n\n"
-            f"Answer:"
+            "Bạn là trợ lý trả lời dựa trên ngữ cảnh được cung cấp.\n"
+            f"Ngữ cảnh:\n{context}\n\n"
+            f"Câu hỏi: {question}\n"
+            "Câu trả lời:"
         )
         return self.llm_fn(prompt)
-
