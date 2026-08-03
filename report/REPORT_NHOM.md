@@ -114,11 +114,11 @@ chunker = RecursiveChunker(separators=["\n\n", "\n", ". ", " ", ""], chunk_size=
 
 | # | Câu hỏi (Query) | Câu trả lời chuẩn (Gold Answer) | Chunk nào chứa thông tin? |
 |---|-------|-------------------------------|--------------------------|
-| 1 | Chuẩn đầu ra ngoại ngữ tiếng Anh đối với sinh viên chính quy khóa K70 được quy định như thế nào? | Sinh viên khóa K70 phải đạt chứng chỉ ngoại ngữ quốc tế (TOEIC, IELTS...) hoặc bài thi chuẩn hóa đầu ra theo khung năng lực quy định của Trường. | `quy-dinh-ngoai-ngu-k70` |
-| 2 | Mức thu học phí năm học 2025-2026 áp dụng cho sinh viên như thế nào? | Mức thu học phí áp dụng theo quy định định mức kinh tế kỹ thuật ban hành cho từng nhóm ngành và chương trình đào tạo năm học 2025-2026. | `quy-dinh-hoc-phi-2025-2026` |
-| 3 | Điều kiện về kết quả học tập và rèn luyện để sinh viên được xét cấp học bổng khuyến khích học tập (KKHT) là gì? | Sinh viên phải có kết quả học tập tích lũy và kết quả rèn luyện đạt từ loại Khá trở lên, không bị kỷ luật trong học kỳ xét thưởng. | `hoc-bong-khuyen-khich-hoc-tap` |
-| 4 | Sinh viên tham gia Bảo hiểm y tế bắt buộc được Ngân sách Nhà nước hỗ trợ bao nhiêu phần trăm mức đóng? | Sinh viên được ngân sách nhà nước hỗ trợ tối thiểu 30% mức đóng BHYT, sinh viên tự đóng 70% còn lại. | `huong-dan-bao-hiem-y-te` |
-| 5 | Quy trình xin giấy xác nhận sinh viên và thời gian giải quyết dịch vụ hành chính CTSV như thế nào? | Sinh viên đăng ký trực tuyến qua ctt.hust.edu.vn cho các mục đích hoãn NVQS, vay vốn..., thời gian xử lý từ 1 đến 3 ngày làm việc. | `quy-dinh-hanh-chinh-sinh-vien` |
+| 1 | | | |
+| 2 | | | |
+| 3 | | | |
+| 4 | | | |
+| 5 | | | |
 
 ### Tổng hợp chất lượng truy xuất của nhóm
 
