@@ -97,13 +97,13 @@ Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 
 > **Đúng 5 câu hỏi**, đa dạng, có thể kiểm chứng; **ít nhất 1 câu** cần lọc metadata mới trả lời tốt. Đây là bộ câu hỏi chung cho mọi thành viên chạy.
 
-| # | Câu hỏi (Query) | Câu trả lời chuẩn (Gold Answer) | Chunk nào chứa thông tin? |
-|---|-------|-------------------------------|--------------------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+| # | Câu hỏi (Query) | Câu trả lời chuẩn (Gold Answer) | Nguồn kiểm chứng | Chunk nào chứa thông tin? |
+|---|-------|-------------------------------|------------------|--------------------------|
+| 1 | Sinh viên không thuộc diện cảnh báo học tập được đăng ký tối đa và tối thiểu bao nhiêu tín chỉ trong một học kỳ chính? | Được đăng ký tối đa 24 tín chỉ và tối thiểu 12 tín chỉ trong học kỳ chính. Riêng sinh viên trình độ năm cuối không áp dụng ngưỡng tối thiểu. | Quy chế đào tạo, Điều 10 khoản 2.a | `QCDT_2025_5445_QD-DHBK.pdf` — Điều 10 khoản 2.a |
+| 2 | Điều kiện để sinh viên được xét học bổng khuyến khích học tập loại A, B và C là gì? | Loại C: GPA ≥ 2,5 và điểm rèn luyện ≥ 65. Loại B: GPA ≥ 3,2 và điểm rèn luyện ≥ 80. Loại A: GPA ≥ 3,6 và điểm rèn luyện ≥ 90. | Quy định xét HB KKHT, Điều 3 | `Quy định về việc xét cấp HB KKHT.pdf` — Điều 3 |
+| 3 | Học phí chương trình đào tạo chuẩn năm học 2025–2026 được quy định như thế nào đối với các ngành Khoa học máy tính và Kỹ thuật hóa học? | Khoa học máy tính: 630.000 đồng/TCHP. Kỹ thuật hóa học: 550.000 đồng/TCHP. | Quyết định học phí 2025–2026, Phụ lục I | `QD HOC PHI - 2025-2026-final.pdf` — Phụ lục I |
+| 4 | Chứng chỉ tiếng Anh dùng để xét miễn học các học phần ngoại ngữ cơ bản phải đáp ứng những điều kiện gì? | Chứng chỉ phải còn hạn tại thời điểm nộp đơn xét miễn; chứng chỉ quốc gia/quốc tế phải được thẩm định nguồn gốc và cập nhật mức điểm lên hệ thống trước khi nộp đơn. Ngoài ra, chứng chỉ được quy đổi tương đương phải đánh giá đủ 4 kỹ năng nghe, nói, đọc, viết và chứng chỉ tiếng Anh phải được cấp trong vòng 2 năm tính đến thời điểm xét. | Quy định ngoại ngữ K70+, Điều 3 và Phụ lục II | `06_ Quy định ngoại ngữ từ K70_chính quy_final.pdf` — Điều 3 và Phụ lục II |
+| 5 | Một học phần được coi là tương đương với học phần khác khi đáp ứng điều kiện nào về nội dung chuyên môn và số tín chỉ? | Hai học phần được coi là tương đương khi nội dung chuyên môn trùng lặp tối thiểu 70%. Học phần tương đương được dùng thay thế phải có số tín chỉ tối thiểu bằng hoặc lớn hơn học phần yêu cầu trong CTĐT. | Quy chế đào tạo, Điều 4 khoản 5.a | `QCDT_2025_5445_QD-DHBK.pdf` — Điều 4 khoản 5.a |
 
 ### Tổng hợp chất lượng truy xuất của nhóm
 
