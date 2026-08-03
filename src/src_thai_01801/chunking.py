@@ -166,3 +166,100 @@ class ChunkingStrategyComparator:
                 "chunks": chunks,
             }
         return comparison
+
+
+class HeadingChunker:
+    """
+    Chiến lược riêng cho Giai đoạn 2 — chia văn bản quy phạm theo ranh giới
+    Điều / Chương / Phụ lục thay vì theo số ký tự.
+
+    Cơ sở thiết kế (xem PHASE2_STRATEGY.md §1):
+        Trong văn bản quy phạm, một "Điều" là một đơn vị ngữ nghĩa hoàn chỉnh và
+        thường chứa trọn câu trả lời cho một câu hỏi. Cắt theo ký tự sẽ xé đôi
+        quy định ở vị trí ngẫu nhiên; cắt theo Điều thì không.
+
+    Hai điểm khác biệt so với 3 chiến lược có sẵn:
+        1. Ranh giới chunk = ranh giới Điều/Chương/Phụ lục.
+        2. Tiêu đề Điều được GHÉP VÀO nội dung mọi chunk con. Nhờ vậy đoạn
+           "…đăng ký tối đa 24 TC…" của chương đại học phân biệt được với đoạn
+           gần như giống hệt ở chương thạc sĩ (PHASE2_STRATEGY.md §5.4b).
+
+    Quy tắc:
+        - Điều ngắn hơn min_chunk_size được gộp với phần kế tiếp.
+        - Điều dài hơn max_chunk_size được cắt tiếp bằng RecursiveChunker,
+          mỗi mảnh con vẫn mang lại tiêu đề gốc.
+        - Văn bản không có tiêu đề nào -> lùi về RecursiveChunker.
+    """
+
+    HEADING = re.compile(
+        r"(?m)^[ \t]*(?:#{1,6}[ \t]*)?(?:\*\*)?[ \t]*"
+        r"(?:Điều\s+\d+\s*[.:]|Chương\s+[IVXLC]+\b|Phụ\s+lục\s+[IVXLC0-9]+\b)"
+    )
+    HEADING_NOISE = re.compile(r"[#*]+")
+
+    def __init__(
+        self,
+        min_chunk_size: int = 120,
+        max_chunk_size: int = 900,
+        separator: str = " — ",
+    ) -> None:
+        self.min_chunk_size = max(1, min_chunk_size)
+        self.max_chunk_size = max(self.min_chunk_size, max_chunk_size)
+        self.separator = separator
+
+    def chunk(self, text: str) -> list[str]:
+        if not text or not text.strip():
+            return []
+
+        matches = list(self.HEADING.finditer(text))
+        if not matches:
+            return RecursiveChunker(chunk_size=self.max_chunk_size).chunk(text)
+
+        pieces: list[str] = []
+
+        # Phần mở đầu trước tiêu đề đầu tiên (căn cứ ban hành, mục lục...)
+        preamble = text[: matches[0].start()].strip()
+        if len(preamble) >= self.min_chunk_size:
+            pieces.extend(RecursiveChunker(chunk_size=self.max_chunk_size).chunk(preamble))
+
+        for index, match in enumerate(matches):
+            end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+            block = text[match.start() : end].strip()
+            if not block:
+                continue
+            pieces.extend(self._split_section(block))
+
+        return self._merge_short(pieces)
+
+    def _split_section(self, block: str) -> list[str]:
+        """Một section = 1 tiêu đề + thân. Cắt nhỏ nếu quá dài, luôn giữ tiêu đề."""
+        heading_line, _, body = block.partition("\n")
+        heading = self.HEADING_NOISE.sub("", heading_line).strip()
+        body = body.strip()
+
+        if not body:
+            return [heading]
+        if len(block) <= self.max_chunk_size:
+            return [f"{heading}{self.separator}{body}"]
+
+        budget = max(1, self.max_chunk_size - len(heading) - len(self.separator))
+        return [
+            f"{heading}{self.separator}{part}"
+            for part in RecursiveChunker(chunk_size=budget).chunk(body)
+        ]
+
+    def _merge_short(self, pieces: list[str]) -> list[str]:
+        """Gộp các mảnh ngắn hơn min_chunk_size vào mảnh kế tiếp."""
+        chunks: list[str] = []
+        buffer = ""
+        for piece in pieces:
+            buffer = piece if not buffer else f"{buffer}\n\n{piece}"
+            if len(buffer) >= self.min_chunk_size:
+                chunks.append(buffer)
+                buffer = ""
+        if buffer:
+            if chunks:
+                chunks[-1] = f"{chunks[-1]}\n\n{buffer}"
+            else:
+                chunks.append(buffer)
+        return chunks
