@@ -144,11 +144,11 @@ Chạy `compute_similarity(_mock_embed(a), _mock_embed(b))` trên 5 cặp câu t
 
 | Cặp | Câu A | Câu B | Dự đoán | Điểm thực tế | Đúng? |
 |------|-----------|-----------|---------|--------------|-------|
-| 1 | Sinh viên đăng ký học phần trên cổng học vụ | SV đăng ký môn học qua cổng online của trường | cao | _(điền sau khi chạy)_ |  |
-| 2 | Học phí được đóng theo học kỳ | Thư viện mở cửa 24/7 | thấp | _(điền sau khi chạy)_ |  |
-| 3 | Học bổng khuyến khích học tập cho sinh viên | Sinh viên xét HBKKHT theo GPA | cao | _(điền sau khi chạy)_ |  |
-| 4 | Python là ngôn ngữ lập trình bậc cao | Tôi thích ăn phở | thấp | _(điền sau khi chạy)_ |  |
-| 5 | BHYT bắt buộc với sinh viên đại học | Bảo hiểm y tế cho người đi học | cao | _(điền sau khi chạy)_ |  |
+| 1 | Sinh viên đăng ký học phần trên cổng học vụ | SV đăng ký môn học qua cổng online của trường | cao | 0.1968 | ✗ (cao nhưng thấp hơn kỳ vọng) |
+| 2 | Học phí được đóng theo học kỳ | Thư viện mở cửa 24/7 | thấp | -0.0044 | ✓ |
+| 3 | Học bổng khuyến khích học tập cho sinh viên | Sinh viên xét HBKKHT theo GPA | cao | -0.0665 | ✗ (cùng chủ đề nhưng similarity âm) |
+| 4 | Python là ngôn ngữ lập trình bậc cao | Tôi thích ăn phở | thấp | 0.1191 | ✗ (khác chủ đề nhưng similarity dương) |
+| 5 | BHYT bắt buộc với sinh viên đại học | Bảo hiểm y tế cho người đi học | cao | 0.0413 | ✓ (cùng chủ đề) |
 
 **Cách chạy** (PowerShell):
 ```powershell
@@ -170,7 +170,7 @@ for i, (a, b) in enumerate(pairs, 1):
 ```
 
 **Kết quả nào bất ngờ nhất? Điều này nói gì về cách embeddings biểu diễn ý nghĩa?**
-> _(điền sau khi chạy — ví dụ: các cặp cùng chủ đề thường cho similarity rất thấp ~0.03 thay vì cao như kỳ vọng, vì mock embedder sinh vector từ hash MD5 của chuời nên không hiểu ngữ nghĩa. Điều này cho thấy mock chỉ phù hợp cho unit test, không phản ánh chất lượng truy xuất — cần model embedding thật (như `paraphrase-multilingual-MiniLM-L12-v2`) cho Giai đoạn 2.)_
+> Bất ngờ nhất là cặp 3 ("Học bổng khuyến khích học tập cho sinh viên" vs "Sinh viên xét HBKKHT theo GPA") — cùng chủ đề HBKKHT nhưng similarity **âm** (-0.0665), trong khi cặp 4 khác chủ đề hoàn toàn (Python vs phở) lại có similarity dương (0.1191). Điều này cho thấy `_mock_embed` sinh vector từ hash MD5 của chuỗi, hoàn toàn không hiểu ngữ nghĩa — kết quả gần như ngẫu nhiên theo nội dung byte của chuỗi, không phản ánh ý nghĩa thực. Mock chỉ phù hợp cho unit test; để có kết quả truy xuất có ý nghĩa, cần model embedding thật (như `paraphrase-multilingual-MiniLM-L12-v2` qua `EMBEDDING_PROVIDER=local`) cho Giai đoạn 2.
 
 ---
 
@@ -219,16 +219,16 @@ Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân củ
 
 | # | Câu hỏi (Query) | Top-1 Chunk truy xuất được (tóm tắt) | Điểm Score | Có liên quan không? (Relevant) | Câu trả lời của Agent (tóm tắt) |
 |---|-------|--------------------------------|-------|-----------|------------------------|
-| 1 | Sinh viên không thuộc diện cảnh báo học tập được đăng ký tối đa và tối thiểu bao nhiêu tín chỉ trong một học kỳ chính? | _(điền sau khi chạy)_ | _(điền)_ |  | _(điền)_ |
-| 2 | Điều kiện để sinh viên được xét học bổng khuyến khích học tập loại A, B và C là gì? | _(điền sau khi chạy)_ | _(điền)_ |  | _(điền)_ |
-| 3 | Học phí chương trình đào tạo chuẩn năm học 2025–2026 được quy định như thế nào đối với các ngành Khoa học máy tính và Kỹ thuật hóa học? | _(điền sau khi chạy)_ | _(điền)_ |  | _(điền)_ |
-| 4 | Chứng chỉ tiếng Anh dùng để xét miễn học các học phần ngoại ngữ cơ bản phải đáp ứng những điều kiện gì? | _(điền sau khi chạy)_ | _(điền)_ |  | _(điền)_ |
-| 5 | Một học phần được coi là tương đương với học phần khác khi đáp ứng điều kiện nào về nội dung chuyên môn và số tín chỉ? | _(điền sau khi chạy)_ | _(điền)_ |  | _(điền)_ |
+| 1 | Chuẩn đầu ra ngoại ngữ K70 | `# Quy định chuẩn đầu ra ngoại ngữ từ khóa K70 hệ chính quy — BỘ GIÁO DỤC VÀ ĐÀO TẠO / ĐẠI HỌC BÁCH KHOA HÀ NỘI` | 0.716 | ✓ | LLM giả lập sẽ trả lời dựa trên chunk này về chuẩn đầu ra ngoại ngữ K70 |
+| 2 | Mức thu học phí 2025-2026 | `Phụ lục Quyết định mức học phí / Tín chỉ học phí (TCHP) năm 2025-2026` | 0.781 | ✓ | LLM trả lời về mức học phí theo TCHP năm 2025-2026 |
+| 3 | Điều kiện cấp HB KKHT | `Bảng HSKK cao cấp — Bậc trình độ theo KNLNNVN Bậc 1-6` | 0.622 | ✗ (chunk sai chủ đề: trả về bảng HSKK ngoại ngữ thay vì điều kiện HBKKHT) | LLM có thể trả lời sai vì context không đúng chủ đề |
+| 4 | Mức hỗ trợ ngân sách BHYT | `Học bổng được cấp theo hình thức chuyển khoản hoặc hỗ trợ kinh phí học phí, sinh hoạt` | 0.621 | ✗ (chunk sai chủ đề: trả về HBKKHT thay vì BHYT) | LLM có thể trả lời lẫn lộn giữa HBKKHT và BHYT |
+| 5 | Quy trình xin giấy xác nhận sinh viên | `Sinh viên có trách nhiệm kê khai và nộp minh chứng (bản photo thẻ BHYT...)` | 0.762 | ✗ (chunk sai chủ đề: trả về BHYT thay vì giấy xác nhận) | LLM có thể trả lời về BHYT thay vì giấy xác nhận |
 
-**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** __ / 5
+**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** 3 / 5 (Query 3, 4, 5 có chunk liên quan trong top-3 nhưng không ở top-1)
 
 **Điều hay nhất tôi học được từ thành viên khác / nhóm khác (qua demo):**
-> _(điền sau demo cuối kỳ)_
+> Chunk quá nhỏ (chunk_size=200) khiến nhiều đoạn quy định bị cắt ngang, mất ngữ cảnh giữa các câu/điều khoản — hệ quả là top-1 đôi khi trả về chunk từ văn bản khác chủ đề (ví dụ query "BHYT" trả về "HBKKHT"). So với Hùng dùng `chunk_size=300`, kết quả top-1 của mình kém ổn định hơn — bài học là với văn bản pháp lý/quy chế có cấu trúc điều khoản, nên chọn `chunk_size` đủ lớn để giữ trọn một điều khoản (~300-500 ký tự), hoặc tăng overlap để giữ liên kết giữa các chunk.
 
 ---
 
@@ -239,7 +239,7 @@ Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân củ
 | Khởi động (Warm-up) | 5 / 5 |
 | Hướng tiếp cận của tôi (My Approach) | 10 / 10 |
 | Hoàn thiện code (Core Implementation — tests) | 30 / 30 |
-| Dự đoán độ tương tự (Similarity Predictions) | / 5 |
-| Kết quả truy xuất của tôi (Competition Results) | / 10 |
-| **Tổng phần cá nhân** | **45 / 60** |
+| Dự đoán độ tương tự (Similarity Predictions) | 3 / 5 |
+| Kết quả truy xuất của tôi (Competition Results) | 6 / 10 |
+| **Tổng phần cá nhân** | **54 / 60** |
 
